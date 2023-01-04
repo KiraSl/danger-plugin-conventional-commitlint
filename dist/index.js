@@ -37,9 +37,9 @@ Object.defineProperty(exports, '__esModule', { value: true });
 const lint_1 = require('@commitlint/lint');
 const defaultConfig = {
   severity: 'fail',
-  messageReplacer: (errors, commitMessage) => {
+  messageReplacer: ({ ruleOutcome, commitMessage }) => {
     let failureMessage = `There is a problem with the commit message\n> ${commitMessage}`;
-    errors.forEach((error) => {
+    ruleOutcome.errors.forEach((error) => {
       failureMessage = `${failureMessage}\n- ${error.message}`;
     });
     return failureMessage;
@@ -56,12 +56,12 @@ function commitlint(rules, userConfig) {
 exports.default = commitlint;
 function lintCommitMessage(commitMessage, rules, config) {
   return __awaiter(this, void 0, void 0, function* () {
-    return (0, lint_1.default)(commitMessage, rules).then((report) => {
-      if (!report.valid) {
-        const failureMessage = config.messageReplacer(
-          report.errors,
-          commitMessage
-        );
+    return (0, lint_1.default)(commitMessage, rules).then((ruleOutcome) => {
+      if (!ruleOutcome.valid) {
+        const failureMessage = config.messageReplacer({
+          ruleOutcome,
+          commitMessage,
+        });
         switch (config.severity) {
           case 'fail':
             fail(failureMessage);

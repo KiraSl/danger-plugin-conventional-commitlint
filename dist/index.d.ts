@@ -1,13 +1,14 @@
-import { LintRuleOutcome } from '@commitlint/types';
+import { LintOutcome } from '@commitlint/types';
 export declare function message(message: string): void;
 export declare function warn(message: string): void;
 export declare function fail(message: string): void;
+export interface ReplacerContext {
+  ruleOutcome: LintOutcome;
+  commitMessage: string;
+}
 export interface CommitlintPluginConfig {
   severity?: 'fail' | 'warn' | 'message' | 'disable';
-  messageReplacer?: (
-    errors: LintRuleOutcome[],
-    commitMessage: string
-  ) => string;
+  messageReplacer?: (context: ReplacerContext) => string;
 }
 interface Rules {
   'body-leading-blank': Array<number | string>;
