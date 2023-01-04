@@ -42,7 +42,42 @@ commitlint([rules], [options])
 
 Type: `String`<br>
 Choices: `'fail' | 'warn' | 'message'`<br>
-danger method to call when the commit message does not pass the linter
+Default: `'fail'`<br>
+Danger method to call when the commit message does not pass the linter
+
+---
+
+#### `messageReplacer`
+
+Type:
+
+```ts
+(ruleOutcome: LintOutcome, commitMessage: string) => string;
+```
+
+Default:
+
+```
+There is a problem with the commit message > [Commit message] - [Error Messages]
+```
+
+Method to add a custom message. When not passed, a default message is shown.
+Example:
+
+```ts
+const messageReplacer = (
+  ruleOutcome: LintOutcome,
+  commitMessage: string
+): string => {
+  const errorsDescription = ruleOutcome.errors
+    .map((error) => `<li>${error.message}</li>`)
+    .join('');
+
+  return `<p>Commit message: <b>"${commitMessage}"</b></p><ul>${errorsDescription}</ul> Suffix after commit message`;
+};
+```
+
+<img width="346" alt="Screenshot 2023-01-04 at 07 42 48" src="https://user-images.githubusercontent.com/42243887/210506880-a7510e8c-7d48-4d18-b2f0-95547ecd5882.png">
 
 ## Changelog
 
